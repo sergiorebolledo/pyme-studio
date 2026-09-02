@@ -1,0 +1,47 @@
+# --- Datos originales y derivados grandes/regenerables ---
+# Los archivos fuente del SII no se redistribuyen (ver data/README.md) y los
+# intermedios grandes del pipeline se regeneran con `python run_pipeline.py`.
+data/raw/*
+!data/raw/.gitkeep
+data/reference/geo_raw/
+outputs/pyme_studio_unificado.csv
+outputs/pyme_studio_agregado_comuna_rubro.csv
+outputs/pyme_studio_agregado_comuna_rubro_enriquecido.csv
+outputs/dashboard_data.json
+outputs/reporte_calidad.json
+outputs/reporte_calidad.md
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- Node (herramienta de generación de la presentación) ---
+node_modules/
+npm-debug.log*
+
+# --- Entorno / secretos locales ---
+.env
+.env.*
+
+# --- Sistema operativo ---
+.DS_Store
+Thumbs.db
+
+# --- Logs y temporales ---
+*.log
+*.tmp
+
+# --- Excepciones: conservar los README de carpetas que si no quedarían vacías ---
+!data/README.md
+!data/raw/README.md
+!outputs/README.md

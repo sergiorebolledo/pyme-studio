@@ -1,0 +1,15 @@
+# PYME Studio — dependencias de Python del pipeline y los scripts de análisis.
+# Instalar con: pip install -r requirements.txt
+# Probado con Python 3.11-3.14.
+
+pandas>=2.2,<4.0
+numpy>=1.26,<3.0
+scipy>=1.11,<2.0
+matplotlib>=3.8,<4.0
+pyxlsb>=1.0,<2.0
+shapely>=2.0,<3.0
+openpyxl>=3.1,<4.0
+
+# Nota: la presentación (docs/presentacion/*.pptx) se genera con Node.js + pptxgenjs,
+# no con Python — ver docs/presentacion/build/package.json y "Cómo regenerar el deck" en
+# docs/presentacion/presentacion.md. requirements.txt no cubre esa parte del proyecto.
