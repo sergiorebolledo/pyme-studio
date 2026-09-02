@@ -2,7 +2,7 @@
 
 Análisis de la relación histórica entre concentración de empresas y su tasa de cierre en Chile, por comuna y rubro económico (2005–2024), con un dashboard interactivo y un mapa de Chile por comuna.
 
-**Autor:** Sergio Ariel Rebolledo Lopez
+**Autor:** 
 **Contexto académico:** Samsung Innovation Campus 2026 — Capstone, Módulo 1 (Big Data Mixto)
 
 ---
