@@ -2,16 +2,15 @@
 
 Análisis de la relación histórica entre concentración de empresas y su tasa de cierre en Chile, por comuna y rubro económico (2005–2024), con un dashboard interactivo y un mapa de Chile por comuna.
 
-**Autor y mantenedor del repositorio:** Sergio Ariel Rebolledo López
-**Equipo académico del proyecto:** Ignacio Hidalgo, Sergio Rebolledo y Avelyn García
+**Autores:** Ignacio Hidalgo, Sergio Ariel Rebolledo López, Avelyn García
 **Contexto académico:** Samsung Innovation Campus 2026 — Capstone, Módulo 1 (Big Data Mixto)
 
 ## Equipo
 
-| Integrante | Rol en el proyecto |
+| Autor | Rol en el proyecto |
 |---|---|
 | **Ignacio Hidalgo** | Redacción de conclusiones, recomendaciones y revisión de coherencia |
-| **Sergio Rebolledo** | Exploración estadística, análisis de correlaciones, y reorganización/endurecimiento metodológico del repositorio |
+| **Sergio Ariel Rebolledo López** | Exploración estadística, análisis de correlaciones, y reorganización/endurecimiento metodológico del repositorio |
 | **Avelyn García** | Carga, limpieza y unión de las fuentes de datos |
 | Todo el equipo | Construcción y revisión de visualizaciones |
 
