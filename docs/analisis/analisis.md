@@ -127,7 +127,7 @@ Se probaron 19 hipótesis (una correlación por rubro) contra alpha=0,05 sin aju
 
 Se recalculó la correlación por rubro en 4 ventanas de tiempo (2005-2010, 2011-2015, 2016-2019, 2020-2024) además del período completo. Script: `../../src/analisis_subperiodos.py` → `../../outputs/pyme_studio_estabilidad_subperiodos.csv` + gráfico `../../outputs/figures/hito4_estabilidad_subperiodos.png`.
 
-**Resultado, no ocultable:** Comercio y Alojamiento/Comidas parten débiles o no significativos en 2005-2010 y se fortalecen consistentemente hasta 2020-2024 (nunca cambian de signo). **Agricultura sí cambia de signo** — positivo y significativo en 2005-2010, negativo y significativo desde 2016. El resultado del período completo (r=−0,268) describe mejor la segunda mitad del período que los 20 años completos. Detalle completo en `../metodologia/metodologia.md`.
+**Resultado, no ocultable:** Comercio parte débil/no significativo en 2005-2010 y se fortalece consistentemente hasta 2020-2024 (nunca cambia de signo). Alojamiento/Comidas sigue el mismo patrón, con su punto más fuerte también en 2020-2024. **Agricultura sí cambia de signo** — positivo y significativo en 2005-2010, pierde significancia en 2011-2015, y pasa a negativo y significativo desde 2016 en adelante. No es una relación estable durante los 20 años: el resultado del período completo (r=−0,268) describe mejor la segunda mitad del período que los 20 años completos. Detalle completo en `../metodologia/metodologia.md`.
 
 ## Precisión conceptual (léase antes de citar este análisis)
 

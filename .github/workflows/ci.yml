@@ -72,16 +72,20 @@ jobs:
           exit $fallo
 
       - name: Comprobar archivos versionados inesperadamente grandes (>5 MB)
+        shell: bash
         run: |
+          # git ls-files | while ...; done ejecutaría el bucle en un subshell (por el pipe),
+          # así que `fallo=1` se perdería al salir del bucle y `exit "$fallo"` vería siempre 0.
+          # Process substitution (`< <(...)`) evita el pipe y mantiene el bucle en este shell.
           fallo=0
-          git ls-files | while IFS= read -r f; do
+          while IFS= read -r f; do
             size=$(stat -c%s "$f" 2>/dev/null || echo 0)
             if [ "$size" -gt 5242880 ]; then
               echo "::error::$f pesa $size bytes (>5 MB) — revisar si debería estar en .gitignore"
               fallo=1
             fi
-          done
-          exit $fallo
+          done < <(git ls-files)
+          exit "$fallo"
 
       - name: Revisar rutas personales o secretos evidentes (sin imprimir valores)
         run: |

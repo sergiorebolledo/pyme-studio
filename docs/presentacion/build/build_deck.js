@@ -469,7 +469,7 @@ function iconCircle(slide, iconFile, x, y, d, circleColor) {
   s.addText("Lo que el equipo puede afirmar con evidencia", { x: 0.6, y: 0.95, w: 11.6, h: 0.65, fontFace: HEAD, fontSize: 25, bold: true, color: INK, margin: 0 });
 
   const concl = [
-    ["1", "La hipótesis de Ignacio se confirma — pero solo donde importa", "En comercio minorista y alojamiento/comidas, la saturación comercial se asocia con mayor cierre de forma estadísticamente robusta (n grande, p < 0,0001)."],
+    ["1", "La hipótesis de Ignacio se confirma — pero solo donde importa", "En comercio minorista y alojamiento/comidas, la concentración de empresas se asocia con mayor cierre — un resultado que se mantiene al excluir 2016 y al corregir por comparaciones múltiples (n grande, p < 0,0001), aunque no fue igual de fuerte todos los años (detalle: diapositivas 15-16)."],
     ["2", "No es una regla universal de negocios", "En agricultura y salud pasa lo contrario: concentrarse ahí parece ser saludable — dinámicas de mercado distintas exigen lecturas distintas."],
     ["3", "El detalle sobrevive a la validación", "El salto de cierres en 2016 tenía una explicación legal real, no era ruido — y cambia cómo se debe leer cualquier análisis año a año."],
   ];
@@ -550,7 +550,7 @@ function iconCircle(slide, iconFile, x, y, d, circleColor) {
 
   s.addShape("rect", { x: 0.6, y: cy2 + 0.15, w: 12.15, h: 1.05, fill: { color: NAVY }, line: { type: "none" } });
   s.addText("CONCLUSIÓN PRUDENTE", { x: 0.85, y: cy2 + 0.26, w: 11.65, h: 0.26, fontFace: MONO, fontSize: 9.5, bold: true, color: "7FC1EA", charSpacing: 1, margin: 0 });
-  s.addText("La concentración empresarial no tiene el mismo significado en todos los sectores. El resultado de Comercio es robusto; en Alojamiento y comidas cambia al controlar la concentración relativa; y en Agricultura, la relación cambia también en el tiempo. Detalle completo: docs/metodologia/metodologia.md.", {
+  s.addText("La concentración empresarial no tiene el mismo significado en todos los sectores. Comercio resiste excluir 2016, cambiar a concentración relativa, y corregir por comparaciones múltiples; en Alojamiento y comidas se invierte al usar concentración relativa; y en Agricultura, la relación cambia de signo en el tiempo. Detalle completo: docs/metodologia/metodologia.md.", {
     x: 0.85, y: cy2 + 0.54, w: 11.65, h: 0.6, fontFace: BODY, fontSize: 11, color: WHITE, margin: 0, lineSpacingMultiple: 1.2,
   });
   pageNum(s, 16);

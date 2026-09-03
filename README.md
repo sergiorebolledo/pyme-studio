@@ -42,16 +42,18 @@ Mezclando todos los rubros económicos, no hay correlación entre concentración
 
 **Hallazgo 1 — mezclar los rubros oculta la relación.** Cuando se analizan juntos, la correlación global es aproximadamente cero porque sectores con comportamientos positivos y negativos se compensan entre sí.
 
-**Hallazgo 2 — Comercio es el resultado más robusto.** Separando por rubro, la correlación aparece con fuerza estadística — y se sostiene bajo cada prueba de robustez aplicada:
+**Hallazgo 2 — Comercio es el resultado más robusto.** Separando por rubro, la correlación aparece con fuerza estadística — y se sostiene bajo cada prueba metodológica aplicada:
 
 | Prueba | Resultado |
 |---|---:|
-| Correlación original (Spearman) | r = 0,575 (p < 0,0001) |
-| Excluyendo 2016 | r = 0,521 (sigue significativo) |
+| Correlación original (Spearman, período completo) | r = 0,575 (p < 0,0001) |
+| Excluyendo el año atípico 2016 | r = 0,521 (sigue significativo) |
 | Con concentración relativa (no solo conteo absoluto) | r = 0,322, mismo signo |
 | Tras corrección por comparaciones múltiples (FDR y Bonferroni, 19 rubros) | Sigue significativo bajo ambos criterios |
 
-**Conclusión prudente:** en Comercio, una mayor concentración territorial está asociada de manera consistente con más términos de giro registrados.
+Estas 4 pruebas son distintas entre sí — ninguna sustituye a las otras. Hay una dimensión adicional que **no** es "robustez" en este sentido: la **estabilidad en el tiempo**. Ahí el resultado es más matizado — ver más abajo.
+
+**Conclusión prudente:** en Comercio, una mayor concentración territorial está asociada con más términos de giro registrados de forma que resiste excluir el año atípico, cambiar la definición de concentración, y corregir por haber probado 19 rubros a la vez. Esto no significa que la relación haya sido igual de fuerte todos los años — ver "Estabilidad temporal" en la sección 4 de abajo, donde se muestra que en Comercio esta asociación era débil en 2005-2010 y se fortaleció recién a partir de 2011.
 
 **Hallazgo 3 — la concentración no significa lo mismo en todos los sectores.**
 
