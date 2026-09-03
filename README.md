@@ -136,7 +136,9 @@ node build_deck.js
 
 ## 9. Cómo abrir el dashboard
 
-Abre [`dashboard/pyme_studio_dashboard.html`](dashboard/pyme_studio_dashboard.html) con doble clic en cualquier navegador — es un solo archivo autocontenido, sin dependencias externas ni conexión a internet.
+**En línea:** [sergiorebolledo.github.io/pyme-studio](https://sergiorebolledo.github.io/pyme-studio/).
+
+**Localmente:** abre [`dashboard/pyme_studio_dashboard.html`](dashboard/pyme_studio_dashboard.html) con doble clic en cualquier navegador — es un solo archivo autocontenido, sin dependencias externas ni conexión a internet.
 
 ## 10. Tecnologías utilizadas
 
