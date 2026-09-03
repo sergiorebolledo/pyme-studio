@@ -27,7 +27,6 @@ from pyxlsb import open_workbook
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data" / "raw"
 OUT_DIR = Path(__file__).resolve().parent.parent / "outputs"
-OUT_DIR.mkdir(exist_ok=True)
 
 ZIP_PATH = DATA_DIR / "Ciclo_Vida.zip"
 XLSB_PATH = DATA_DIR / "PUB_COMU_RUBR.xlsb"
@@ -60,10 +59,17 @@ def cargar_cierres() -> pd.DataFrame:
     """
     with zipfile.ZipFile(ZIP_PATH) as z, z.open("PUB_TG.txt") as f:
         df = pd.read_csv(f, sep="\t", encoding="latin-1", dtype=str)
+    return limpiar_cierres(df)
 
+
+def limpiar_cierres(df: pd.DataFrame) -> pd.DataFrame:
+    """Núcleo puro de la limpieza de PUB_TG.txt — sin I/O, para poder probarlo
+    con un DataFrame sintético. Espera las columnas crudas del export del SII:
+    'Año comercial', 'Comuna', 'Rubro', 'Recuento' (todas como texto)."""
     df = df.dropna(subset=["Año comercial"])  # descarta filas 100% vacías
     df = df[df["Rubro"].str.strip() != "Valor por Defecto"]
 
+    df = df.copy()
     df["anio"] = df["Año comercial"].astype(int)
     df["cierres"] = parsear_recuento(df["Recuento"])
     df["comuna"] = df["Comuna"].str.strip().str.upper()
@@ -76,9 +82,16 @@ def cargar_aperturas() -> pd.DataFrame:
     """PUB_actividades_inscritas.txt: aperturas de actividades (no tiene filas vacías)."""
     with zipfile.ZipFile(ZIP_PATH) as z, z.open("PUB_actividades_inscritas.txt") as f:
         df = pd.read_csv(f, sep="\t", encoding="latin-1", dtype=str)
+    return limpiar_aperturas(df)
 
+
+def limpiar_aperturas(df: pd.DataFrame) -> pd.DataFrame:
+    """Núcleo puro de la limpieza de PUB_actividades_inscritas.txt — sin I/O.
+    Espera las columnas crudas del export del SII: 'Año comercial', 'Comuna',
+    'RUBRO', 'Recuento' (todas como texto)."""
     df = df[df["RUBRO"].str.strip() != "Valor por Defecto"]
 
+    df = df.copy()
     df["anio"] = df["Año comercial"].astype(int)
     df["aperturas"] = parsear_recuento(df["Recuento"])
     df["comuna"] = df["Comuna"].str.strip().str.upper()
@@ -95,21 +108,30 @@ def cargar_empresas_activas() -> pd.DataFrame:
             if i < 5:
                 continue
             anio, comuna, rubro, n_empresas = row[0].v, row[1].v, row[4].v, row[5].v
-            if anio is None or comuna is None or rubro is None:
-                continue
-            if rubro == "Sin información" or comuna == "Sin Información":
-                continue
-            filas.append((int(anio), str(comuna).strip().upper(), normalizar_rubro(rubro), n_empresas or 0))
+            filas.append((anio, comuna, rubro, n_empresas))
+    return limpiar_empresas_activas(filas)
 
-    df = pd.DataFrame(filas, columns=["anio", "comuna", "rubro", "empresas_activas"])
+
+def limpiar_empresas_activas(filas: list) -> pd.DataFrame:
+    """Núcleo puro de la limpieza de PUB_COMU_RUBR.xlsb — sin I/O. `filas` es
+    una lista de tuplas crudas (anio, comuna, rubro, n_empresas), tal como se
+    leen fila a fila de la hoja de cálculo (n_empresas puede ser None)."""
+    limpias = []
+    for anio, comuna, rubro, n_empresas in filas:
+        if anio is None or comuna is None or rubro is None:
+            continue
+        if rubro == "Sin información" or comuna == "Sin Información":
+            continue
+        limpias.append((int(anio), str(comuna).strip().upper(), normalizar_rubro(rubro), n_empresas or 0))
+
+    df = pd.DataFrame(limpias, columns=["anio", "comuna", "rubro", "empresas_activas"])
     return df.groupby(["anio", "comuna", "rubro"], as_index=False)["empresas_activas"].sum()
 
 
-def unir_fuentes() -> pd.DataFrame:
-    aperturas = cargar_aperturas()
-    cierres = cargar_cierres()
-    activas = cargar_empresas_activas()
-
+def combinar_fuentes(aperturas: pd.DataFrame, cierres: pd.DataFrame, activas: pd.DataFrame) -> pd.DataFrame:
+    """Núcleo puro de la unión — sin I/O, para poder probarlo con datos sintéticos.
+    Cada argumento ya viene agrupado por (anio, comuna, rubro), como devuelven
+    cargar_aperturas/cargar_cierres/cargar_empresas_activas."""
     df = aperturas.merge(cierres, on=["anio", "comuna", "rubro"], how="outer")
     df = df.merge(activas, on=["anio", "comuna", "rubro"], how="outer")
 
@@ -122,6 +144,13 @@ def unir_fuentes() -> pd.DataFrame:
     df["tasa_cierre"] = (df["cierres"] / denom).round(4)
 
     return df.sort_values(["anio", "comuna", "rubro"]).reset_index(drop=True)
+
+
+def unir_fuentes() -> pd.DataFrame:
+    aperturas = cargar_aperturas()
+    cierres = cargar_cierres()
+    activas = cargar_empresas_activas()
+    return combinar_fuentes(aperturas, cierres, activas)
 
 
 def verificar_entradas() -> None:
@@ -146,6 +175,7 @@ def verificar_entradas() -> None:
 
 def main():
     verificar_entradas()
+    OUT_DIR.mkdir(exist_ok=True)
     df = unir_fuentes()
     out_path = OUT_DIR / "pyme_studio_unificado.csv"
     df.to_csv(out_path, index=False, encoding="utf-8")

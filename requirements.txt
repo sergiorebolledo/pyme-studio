@@ -1,6 +1,9 @@
 # PYME Studio — dependencias de Python del pipeline y los scripts de análisis.
 # Instalar con: pip install -r requirements.txt
-# Probado con Python 3.11-3.14.
+#
+# Probado localmente con Python 3.14. La integración continua (.github/workflows/ci.yml)
+# corre los tests en Python 3.11, 3.12 y 3.13 en cada push — ver docs/REPRODUCIBILIDAD.md
+# para el detalle exacto de qué se verificó en qué versión.
 
 pandas>=2.2,<4.0
 numpy>=1.26,<3.0

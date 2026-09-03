@@ -1,0 +1,122 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Matriz limitada a versiones realmente probadas en CI — ver requirements.txt.
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Validar sintaxis de todos los scripts
+        run: python -m compileall -q src run_pipeline.py tests
+
+      - name: Comprobar que los módulos importan sin ejecutar el pipeline
+        run: |
+          python -c "
+          import sys
+          sys.path.insert(0, 'src')
+          import pipeline, analisis_hito4, analisis_metodologia, analisis_tamano_empresas
+          import analisis_comparaciones_multiples, analisis_subperiodos
+          import validar_calidad, validar_cruzado, preparar_geo_comunas, construir_dashboard
+          import graficar_hito4, graficar_hito4_extra
+          print('Todos los módulos importan correctamente.')
+          "
+
+      - name: pytest (datos sintéticos, no requiere archivos del SII)
+        run: python -m pytest tests/ -v
+
+  repo-hygiene:
+    name: Higiene del repositorio
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verificar que no se versionen datos originales del SII
+        run: |
+          ARCHIVOS="Ciclo_Vida.zip PUB_COMU_RUBR.xlsb PUB_Reg_Com_Rub.xlsx PUB_Rub_Sub_Act.xlsx PUB_TRAM5_RUBR.xlsb PUB_TRAM5_COMU.xlsb PUB_RUBR_TRTRAB.xlsb PUB_COMU_TRTRAB.xlsb"
+          fallo=0
+          for f in $ARCHIVOS; do
+            if git ls-files | grep -q "data/raw/$f$"; then
+              echo "::error::$f está versionado en data/raw/ — estos archivos del SII no se redistribuyen (ver data/README.md)"
+              fallo=1
+            fi
+          done
+          exit $fallo
+
+      - name: Verificar que no se versionen derivados grandes excluidos
+        run: |
+          EXCLUIDOS="outputs/pyme_studio_unificado.csv outputs/pyme_studio_agregado_comuna_rubro.csv outputs/pyme_studio_agregado_comuna_rubro_enriquecido.csv outputs/dashboard_data.json outputs/reporte_calidad.json outputs/reporte_calidad.md"
+          fallo=0
+          for f in $EXCLUIDOS; do
+            if git ls-files | grep -qx "$f"; then
+              echo "::error::$f está versionado pero debería quedar excluido (ver outputs/README.md)"
+              fallo=1
+            fi
+          done
+          exit $fallo
+
+      - name: Comprobar archivos versionados inesperadamente grandes (>5 MB)
+        run: |
+          fallo=0
+          git ls-files | while IFS= read -r f; do
+            size=$(stat -c%s "$f" 2>/dev/null || echo 0)
+            if [ "$size" -gt 5242880 ]; then
+              echo "::error::$f pesa $size bytes (>5 MB) — revisar si debería estar en .gitignore"
+              fallo=1
+            fi
+          done
+          exit $fallo
+
+      - name: Revisar rutas personales o secretos evidentes (sin imprimir valores)
+        run: |
+          if git grep -lIE 'C:\\Users\\[A-Za-z0-9_]+|/home/[a-z][a-z0-9_-]*/[a-z]|AKIA[0-9A-Z]{16}|api[_-]?key[[:space:]]*=|secret[_-]?key[[:space:]]*=|password[[:space:]]*=' -- . ':(exclude)docs/presentacion/*.pptx' > /tmp/hits.txt; then
+            echo "::error::Posibles rutas personales o secretos en los archivos listados (revisar manualmente, valores no impresos):"
+            cat /tmp/hits.txt
+            exit 1
+          fi
+          echo "Sin coincidencias."
+
+      - name: Revisar enlaces relativos en Markdown
+        run: |
+          python3 - <<'PYEOF'
+          import re, os, sys
+
+          root = "."
+          broken = []
+          for dirpath, dirnames, files in os.walk(root):
+              dirnames[:] = [d for d in dirnames if d not in (".git", "node_modules")]
+              for fn in files:
+                  if not fn.endswith(".md"):
+                      continue
+                  path = os.path.join(dirpath, fn)
+                  text = open(path, encoding="utf-8").read()
+                  for m in re.finditer(r'\]\(([^)]+)\)', text):
+                      link = m.group(1)
+                      if link.startswith("http") or link.startswith("#"):
+                          continue
+                      target = os.path.normpath(os.path.join(dirpath, link))
+                      if not os.path.exists(target):
+                          broken.append((path, link))
+
+          if broken:
+              for p, l in broken:
+                  print(f"::error::Enlace roto en {p} -> {l}")
+              sys.exit(1)
+          print("Sin enlaces rotos.")
+          PYEOF

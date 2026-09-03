@@ -86,6 +86,15 @@ def construir_dashboard_data():
                 correlacion_por_rubro[row["rubro"]]["p_relativa"] = row["p_relativa"]
                 correlacion_por_rubro[row["rubro"]]["mismo_signo_relativa"] = bool(row["mismo_signo"])
 
+    ajustada_path = OUT_DIR / "pyme_studio_correlacion_por_rubro_ajustada.csv"
+    if ajustada_path.exists():
+        ajustada = pd.read_csv(ajustada_path)
+        for _, row in ajustada.iterrows():
+            if row["rubro"] in correlacion_por_rubro:
+                correlacion_por_rubro[row["rubro"]]["p_ajustado_fdr"] = row["p_ajustado_fdr"]
+                correlacion_por_rubro[row["rubro"]]["significativo_fdr"] = bool(row["significativo_fdr"])
+                correlacion_por_rubro[row["rubro"]]["significativo_bonferroni"] = bool(row["significativo_bonferroni"])
+
     uni = pd.read_csv(OUT_DIR / "pyme_studio_unificado.csv")
     serie_anual = uni.groupby("anio")[["aperturas", "cierres"]].sum().reset_index().values.tolist()
 

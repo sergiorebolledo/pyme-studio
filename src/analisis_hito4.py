@@ -29,9 +29,10 @@ IN_PATH = OUT_DIR / "pyme_studio_unificado.csv"
 MIN_EMPRESA_ANIOS = 200  # umbral mínimo de exposición para evitar ruido de muestras chicas
 
 
-def cargar_y_agregar() -> pd.DataFrame:
-    df = pd.read_csv(IN_PATH)
-
+def agregar(df: pd.DataFrame) -> pd.DataFrame:
+    """Núcleo puro de la agregación — sin I/O, para poder probarlo con datos
+    sintéticos. df debe tener las columnas anio, comuna, rubro, aperturas,
+    cierres, empresas_activas (el formato de pyme_studio_unificado.csv)."""
     agg = df.groupby(["comuna", "rubro"], as_index=False).agg(
         aperturas_total=("aperturas", "sum"),
         cierres_total=("cierres", "sum"),
@@ -41,6 +42,10 @@ def cargar_y_agregar() -> pd.DataFrame:
     # Tasa de cierre por "empresa-año" de exposición — más robusta que promediar tasas anuales.
     agg["tasa_cierre"] = agg["cierres_total"] / agg["empresa_anios"]
     return agg
+
+
+def cargar_y_agregar() -> pd.DataFrame:
+    return agregar(pd.read_csv(IN_PATH))
 
 
 def analizar_correlacion(agg: pd.DataFrame) -> pd.DataFrame:
@@ -95,7 +100,8 @@ def correlacion_por_rubro(agg: pd.DataFrame, min_comunas: int = 30) -> pd.DataFr
         r, p = stats.spearmanr(grupo["concentracion_promedio"], grupo["tasa_cierre"])
         resultados.append({"rubro": rubro, "n_comunas": len(grupo), "spearman_r": r, "p_valor": p})
 
-    df = pd.DataFrame(resultados).sort_values("spearman_r", ascending=False)
+    columnas = ["rubro", "n_comunas", "spearman_r", "p_valor"]
+    df = pd.DataFrame(resultados, columns=columnas).sort_values("spearman_r", ascending=False)
     print(f"\n--- Correlación concentración~cierre POR RUBRO (controlando por sector) ---")
     print(f"({min_comunas}+ comunas por rubro, 50+ empresa-años de exposición por combinación)\n")
     print(df.to_string(index=False))

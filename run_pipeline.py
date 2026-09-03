@@ -45,6 +45,8 @@ ETAPAS = [
     ("Análisis principal (correlación concentración~cierre)", "analisis_hito4.py"),
     ("Alcance del universo — clasificación oficial de tamaño de empresa", "analisis_tamano_empresas.py"),
     ("Sensibilidad a 2016 y concentración relativa", "analisis_metodologia.py"),
+    ("Corrección por comparaciones múltiples (FDR y Bonferroni)", "analisis_comparaciones_multiples.py"),
+    ("Estabilidad por subperíodo", "analisis_subperiodos.py"),
     ("Gráfico — dispersión por rubro", "graficar_hito4.py"),
     ("Gráficos — barras, serie de tiempo, boxplot", "graficar_hito4_extra.py"),
     ("__GEO__", "preparar_geo_comunas.py"),  # opcional, ver --regenerar-geo

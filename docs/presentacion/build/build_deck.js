@@ -31,7 +31,7 @@ pres.subject = "Concentración de empresas y su relación con el cierre de negoc
 pres.author = "Ignacio Hidalgo, Sergio Ariel Rebolledo López, Avelyn García";
 pres.company = "Samsung Innovation Campus 2026 — Big Data Mixto";
 const W = 13.33, H = 7.5;
-const TOTAL = 17;
+const TOTAL = 18;
 
 function bgFill(slide, color) { slide.background = { color }; }
 
@@ -526,7 +526,37 @@ function iconCircle(slide, iconFile, x, y, d, circleColor) {
   pageNum(s, 15);
 }
 
-// ============================================================ 16. EQUIPO Y ESTADO
+// ============================================================ 16. ROBUSTEZ METODOLÓGICA II — COMPARACIONES MÚLTIPLES Y TIEMPO
+{
+  const s = pres.addSlide();
+  bgFill(s, PAPER);
+  kicker(s, "Robustez metodológica (continuación)", { x: 0.6, y: 0.5 });
+  s.addText("¿Se sostiene probando 19 rubros a la vez, y en el tiempo?", { x: 0.6, y: 0.95, w: 11.8, h: 0.6, fontFace: HEAD, fontSize: 24, bold: true, color: INK, margin: 0 });
+
+  const checks2 = [
+    ["¿Sobreviven las 19 correlaciones a probarse todas a la vez?",
+     "Sí, en su mayoría. De 12 rubros significativos sin ajustar, los 12 se mantienen con la corrección FDR (Benjamini-Hochberg) y 11 con Bonferroni, más estricta. Comercio, Alojamiento/Comidas y Agricultura — el hallazgo central — se mantienen significativos bajo ambos criterios.", OK],
+    ["¿La relación es igual de fuerte en todo el período 2005-2024?",
+     "No. Comercio y Alojamiento/Comidas se fortalecen con el tiempo: débiles o no significativos en 2005-2010, consistentemente más fuertes hacia 2020-2024 — nunca cambian de signo. Agricultura sí cambia de signo: positivo en 2005-2010, negativo desde 2016 en adelante.", RUST],
+  ];
+  let cy2 = 2.05;
+  const rowH2 = 1.55;
+  checks2.forEach((c) => {
+    s.addShape("rect", { x: 0.6, y: cy2, w: 0.1, h: rowH2 - 0.25, fill: { color: c[2] }, line: { type: "none" } });
+    s.addText(c[0], { x: 0.95, y: cy2 - 0.02, w: 11.3, h: 0.45, fontFace: HEAD, fontSize: 14.5, bold: true, color: INK, margin: 0 });
+    s.addText(c[1], { x: 0.95, y: cy2 + 0.42, w: 11.3, h: 0.85, fontFace: BODY, fontSize: 11.5, color: MUTED, margin: 0, lineSpacingMultiple: 1.25 });
+    cy2 += rowH2;
+  });
+
+  s.addShape("rect", { x: 0.6, y: cy2 + 0.15, w: 12.15, h: 1.05, fill: { color: NAVY }, line: { type: "none" } });
+  s.addText("CONCLUSIÓN PRUDENTE", { x: 0.85, y: cy2 + 0.26, w: 11.65, h: 0.26, fontFace: MONO, fontSize: 9.5, bold: true, color: "7FC1EA", charSpacing: 1, margin: 0 });
+  s.addText("La concentración empresarial no tiene el mismo significado en todos los sectores. El resultado de Comercio es robusto; en Alojamiento y comidas cambia al controlar la concentración relativa; y en Agricultura, la relación cambia también en el tiempo. Detalle completo: docs/metodologia/metodologia.md.", {
+    x: 0.85, y: cy2 + 0.54, w: 11.65, h: 0.6, fontFace: BODY, fontSize: 11, color: WHITE, margin: 0, lineSpacingMultiple: 1.2,
+  });
+  pageNum(s, 16);
+}
+
+// ============================================================ 17. EQUIPO Y ESTADO
 {
   const s = pres.addSlide();
   bgFill(s, PAPER);
@@ -552,10 +582,10 @@ function iconCircle(slide, iconFile, x, y, d, circleColor) {
     s.addText(`Hito ${h[0]} — ${h[1]}`, { x: 8.35, y: hy + 0.01, w: 4.3, h: 0.32, fontFace: BODY, fontSize: 12.5, color: INK, margin: 0, valign: "middle" });
     hy += 0.475;
   });
-  pageNum(s, 16);
+  pageNum(s, 17);
 }
 
-// ============================================================ 17. CIERRE
+// ============================================================ 18. CIERRE
 {
   const s = pres.addSlide();
   bgFill(s, NAVY);
@@ -565,7 +595,7 @@ function iconCircle(slide, iconFile, x, y, d, circleColor) {
   s.addText("Dashboard interactivo, código y documentación completa disponibles en la carpeta del proyecto.", {
     x: 0, y: 5.2, w: W, h: 0.5, align: "center", fontFace: BODY, italic: true, fontSize: 12.5, color: "BFD8EA", margin: 0,
   });
-  pageNum(s, 17);
+  pageNum(s, 18);
 }
 
 pres.writeFile({ fileName: path.join(__dirname, "..", "PYME_Studio_Presentacion.pptx") }).then(() => {

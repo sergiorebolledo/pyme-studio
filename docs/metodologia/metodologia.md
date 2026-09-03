@@ -74,6 +74,61 @@ A nivel comuna, el promedio nacional de empresas "grandes" es 0,60% (mediana 0,3
 
 ---
 
+## 5c. Corrección por comparaciones múltiples — detalle técnico
+
+**Por qué hace falta:** `analisis_hito4.py` prueba 19 hipótesis independientes (una correlación por rubro). Evaluar cada una contra alpha=0,05 sin ajustar infla la probabilidad de declarar "significativo" algo que en realidad es ruido, solo por el número de pruebas realizadas.
+
+**Script:** `../../src/analisis_comparaciones_multiples.py` → `../../outputs/pyme_studio_correlacion_por_rubro_ajustada.csv` (no modifica `pyme_studio_correlacion_por_rubro.csv`).
+
+**Métodos aplicados a la familia principal de 19 rubros (alpha=0,05):**
+- **Benjamini-Hochberg / FDR** (principal): controla la tasa esperada de falsos descubrimientos entre los rubros declarados significativos.
+- **Bonferroni** (contraste conservador): controla la probabilidad de al menos un falso positivo en toda la familia.
+
+**Resultado:**
+
+| Criterio | Rubros significativos (de 19) |
+|---|---:|
+| Sin ajustar | 12 |
+| FDR (Benjamini-Hochberg) | 12 — **0 cambian de conclusión** |
+| Bonferroni | 11 — **1 cambia de conclusión** |
+
+El único rubro que cambia de conclusión es **Actividades Financieras y de Seguros** (p original = 0,027, ya identificado como marginal): sigue significativo bajo FDR pero deja de serlo bajo Bonferroni (p ajustado = 0,505). **Enseñanza** ya era no significativo sin ajustar (p=0,079), así que no "cambia" — nunca cruzó el umbral.
+
+**Los 3 rubros del hallazgo central (Comercio, Alojamiento/Comidas, Agricultura) se mantienen significativos bajo ambos criterios**, con p-valores ajustados muchos órdenes de magnitud por debajo de 0,05 (ej. Comercio: p original = 1,6×10⁻³¹, p ajustado FDR = 3,1×10⁻³⁰). La corrección por comparaciones múltiples no debilita el hallazgo principal — solo aclara que el único resultado sensible a este chequeo es uno ya marcado como marginal.
+
+**Familia de hipótesis:** esta corrección se aplica solo a la familia de 19 rubros de `analisis_hito4.py` — no se mezcla con la sensibilidad a 2016 (5b) ni con la comparación absoluta/relativa (5b arriba), que son preguntas metodológicas distintas. Cada subperíodo (5d, abajo) forma su propia familia de 19, corregida por separado.
+
+---
+
+## 5d. Estabilidad por subperíodo — detalle técnico
+
+**Por qué hace falta:** el resultado principal agrega 2005-2024 completo. Antes de presentarlo como una relación estable, corresponde comprobar si se sostiene dentro de ventanas de tiempo más cortas, o si es un artefacto de promediar 20 años con comportamientos distintos.
+
+**Script:** `../../src/analisis_subperiodos.py` → `../../outputs/pyme_studio_estabilidad_subperiodos.csv` + `../../outputs/figures/hito4_estabilidad_subperiodos.png`.
+
+**Períodos evaluados:** 2005-2010, 2011-2015, 2016-2019, 2020-2024, el completo 2005-2024, y el completo excluyendo 2016 — misma metodología que el análisis principal (Spearman, ≥50 empresa-años por combinación, ≥30 comunas por rubro), con corrección FDR aplicada **dentro de cada período por separado** (cada subperíodo es su propia familia de 19 hipótesis).
+
+**Resultado — los 3 rubros centrales, por período:**
+
+| Período | Comercio | Alojamiento/Comidas | Agricultura |
+|---|---:|---:|---:|
+| 2005-2010 | r=0,060 (n.s.) | r=0,124 (n.s.) | r=0,214 (sig., **positivo**) |
+| 2011-2015 | r=0,271 (sig.) | r=0,131 (sig., marginal) | r=0,102 (n.s.) |
+| 2016-2019 | r=0,504 (sig.) | r=0,149 (sig.) | r=−0,309 (sig., **negativo**) |
+| 2020-2024 | r=0,542 (sig.) | r=0,367 (sig.) | r=−0,408 (sig., **negativo**) |
+| 2005-2024 (completo) | r=0,575 (sig.) | r=0,359 (sig.) | r=−0,268 (sig.) |
+
+**Interpretación prudente — esto es un hallazgo real, no ruido de muestra chica:**
+
+- **Comercio y Alojamiento/Comidas se fortalecen con el tiempo.** Ambos parten débiles o no significativos en 2005-2010 y se vuelven consistentemente más fuertes en cada período posterior, hasta llegar a su punto más alto en 2020-2024. El resultado del período completo (r=0,575 y r=0,359) es real, pero está más influenciado por los años recientes que por los primeros — el patrón nunca cambia de signo, solo de intensidad.
+- **Agricultura cambia de signo.** Es positivo y significativo en 2005-2010, pierde significancia en 2011-2015, y se vuelve negativo y significativo desde 2016 en adelante. El resultado del período completo (r=−0,268) refleja sobre todo la segunda mitad del período — la primera mitad mostraba lo contrario. Esto no invalida el hallazgo del período completo, pero sí significa que "la concentración en Agricultura se asocia con menos cierre" es una descripción más precisa de 2016-2024 que de los 20 años completos.
+- **Los subperíodos de 4-5 años tienen menos muestra que el período completo** (menos empresa-años de exposición), así que sus estimaciones son individualmente menos estables — se reconoce esto explícitamente y no se presenta un solo subperíodo como definitivo. El período 2016-2019 además contiene el evento administrativo de 2016 (ver 4b).
+- No se interpretan estas variaciones como cambios estructurales abruptos — es un patrón gradual y consistente con la idea de que el tejido comercial y de servicios chileno evolucionó (más comercio electrónico, cambios post-pandemia, etc.) durante estos 20 años, no un quiebre puntual.
+
+**Qué hacer con esto:** el README y la presentación citan el resultado del período completo (es la comparación más simple y la que tiene mayor muestra), pero mencionan que la relación se fortalece con el tiempo en Comercio/Alojamiento y cambia de signo en Agricultura — no se presenta el hallazgo como si hubiera sido igual de válido en 2006 que en 2024.
+
+---
+
 ## 6. Tratamiento de combinaciones ausentes (año, comuna, rubro)
 
 **La pregunta:** `pipeline.py` hace un `outer join` entre las 3 fuentes y rellena con 0 donde una fuente no tenga una combinación (año, comuna, rubro). ¿La ausencia significa realmente cero, o podría significar "no informado"?
@@ -130,5 +185,6 @@ Se revisaron todos los entregables (README, análisis, dashboard, presentación)
 
 ## Trazabilidad — qué se agregó, qué NO se tocó
 
-- `pipeline.py`, `analisis_hito4.py` y sus salidas (`pyme_studio_unificado.csv`, `pyme_studio_agregado_comuna_rubro.csv`, `pyme_studio_correlacion_por_rubro.csv`) **no se modificaron** — los resultados originales del Hito 4 siguen intactos y son los que cita el README como resultado principal.
-- Todo lo nuevo de este anexo vive en archivos **nuevos**: `pyme_studio_alcance_pyme_por_rubro.csv`, `pyme_studio_alcance_pyme_por_comuna.csv`, `pyme_studio_sensibilidad_2016.csv`, `hito4_sensibilidad_2016.png`, `pyme_studio_agregado_comuna_rubro_enriquecido.csv`, `pyme_studio_concentracion_absoluta_vs_relativa.csv`, `reporte_calidad.json`/`.md` — todos en `outputs/` (los 4 CSV de resultados y `hito4_sensibilidad_2016.png` están versionados en este repositorio; el resto se regenera con `python run_pipeline.py`, ver `outputs/README.md`), generados por 3 scripts nuevos (`analisis_tamano_empresas.py`, `analisis_metodologia.py`, `validar_calidad.py`).
+- `pipeline.py` y las salidas de `analisis_hito4.py` (`pyme_studio_unificado.csv`, `pyme_studio_agregado_comuna_rubro.csv`, `pyme_studio_correlacion_por_rubro.csv`) **no cambiaron de resultado** — los valores originales siguen intactos y son los que cita el README como resultado principal. `analisis_hito4.py` sí recibió una corrección defensiva menor (evita un error si algún día ningún rubro cumpliera el umbral mínimo, un caso límite que no ocurre con los datos reales) — verificado que produce exactamente los mismos números antes y después del cambio.
+- Todo lo nuevo de este anexo vive en archivos **nuevos**: `pyme_studio_alcance_pyme_por_rubro.csv`, `pyme_studio_alcance_pyme_por_comuna.csv`, `pyme_studio_sensibilidad_2016.csv`, `hito4_sensibilidad_2016.png`, `pyme_studio_agregado_comuna_rubro_enriquecido.csv`, `pyme_studio_concentracion_absoluta_vs_relativa.csv`, `pyme_studio_correlacion_por_rubro_ajustada.csv`, `pyme_studio_estabilidad_subperiodos.csv`, `hito4_estabilidad_subperiodos.png`, `reporte_calidad.json`/`.md` — todos en `outputs/` (los CSV de resultados pequeños y los PNG están versionados en este repositorio; los intermedios grandes se regeneran con `python run_pipeline.py`, ver `outputs/README.md`), generados por 5 scripts nuevos (`analisis_tamano_empresas.py`, `analisis_metodologia.py`, `validar_calidad.py`, `analisis_comparaciones_multiples.py`, `analisis_subperiodos.py`).
+- Los tests (`tests/`) cubren las funciones puras de estos scripts con datos sintéticos — no dependen de los archivos del SII ni verifican los valores reales citados arriba, solo el comportamiento del código (ver `docs/REPRODUCIBILIDAD.md` para la corrida real que sí generó estos números).

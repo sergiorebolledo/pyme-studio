@@ -1,0 +1,5 @@
+# PYME Studio — dependencias adicionales para desarrollo y CI (no necesarias
+# para correr el pipeline en producción, solo para probarlo).
+# Instalar con: pip install -r requirements.txt -r requirements-dev.txt
+
+pytest>=8.0,<10.0

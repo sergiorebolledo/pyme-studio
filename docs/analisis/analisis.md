@@ -47,7 +47,7 @@ Antes de descartar la hipótesis, se segmentó por tipo de negocio. Los casos de
 
 ## Interpretación para el producto final
 
-1. **La hipótesis original no es universal, pero es cierta donde más importa.** En comercio minorista y alojamiento/comidas — el corazón del ejemplo de "sushi y pizzerías en la misma calle" — la saturación comercial sí se asocia con mayor cierre, de forma estadísticamente robusta (n grande, p muy bajo).
+1. **La hipótesis original no es universal, pero es cierta donde más importa.** En comercio minorista y alojamiento/comidas — el corazón del ejemplo de "sushi y pizzerías en la misma calle" — la concentración de empresas sí se asocia con mayor cierre, de forma estadísticamente robusta (n grande, p muy bajo). *(Nota: "concentración" no es lo mismo que "saturación" — ver la advertencia más abajo sobre por qué no se usa ese término sin matices.)*
 2. **En sectores con economías de aglomeración (agricultura, salud), pasa lo contrario** — concentrarse ahí parece ser saludable, no riesgoso. Esto es un hallazgo genuino, no un error: distintos rubros tienen dinámicas de mercado distintas.
 3. **Recomendación para el dashboard (Hito 5):** no presentar un solo número de "riesgo por concentración" — mostrar el análisis segmentado por rubro, destacando comercio y alojamiento/comidas como los casos donde el indicador es más confiable y accionable.
 
@@ -117,6 +117,18 @@ De los 19 rubros analizados, solo **2 cambian de conclusión** al excluir 2016 (
 
 **Esto es un matiz real, no un detalle menor:** el hallazgo de Comercio es robusto a este cambio metodológico. El hallazgo de Alojamiento/Comidas **no** — cuando se mide qué tan grande es ese rubro *como proporción del comercio local* (en vez de en términos absolutos), la relación se invierte: las comunas donde alojamiento/comidas es una porción grande de la actividad local (posibles comunas turísticas especializadas) tienden a tener **menos** cierre, no más. Una lectura plausible es que el resultado original (por conteo absoluto) reflejaba en parte que las ciudades grandes concentran mucha actividad y mucha rotación en general, no necesariamente saturación específica de ese rubro. **De aquí en adelante, cualquier afirmación sobre Alojamiento/Comidas en el dashboard o la presentación debe mostrar ambas métricas, no solo la absoluta** — y "concentración" (a secas) no debe llamarse "saturación" sin esta advertencia. Detalle completo en `../metodologia/metodologia.md`.
 
+## Corrección por comparaciones múltiples — ¿los 19 rubros probados a la vez inflan la significancia?
+
+Se probaron 19 hipótesis (una correlación por rubro) contra alpha=0,05 sin ajustar. Se aplicó corrección FDR (Benjamini-Hochberg) y Bonferroni sobre esa misma familia de 19. Script: `../../src/analisis_comparaciones_multiples.py` → `../../outputs/pyme_studio_correlacion_por_rubro_ajustada.csv`.
+
+**Resultado:** de 12 rubros significativos sin ajustar, los 12 se mantienen bajo FDR y 11 bajo Bonferroni — el único que cambia es Actividades Financieras y de Seguros (ya identificado como marginal). **Comercio, Alojamiento/Comidas y Agricultura — el hallazgo central — se mantienen significativos bajo ambos criterios**, con p-valores ajustados muchos órdenes de magnitud por debajo de 0,05. Detalle completo en `../metodologia/metodologia.md`.
+
+## Estabilidad por subperíodo — ¿la relación es igual de fuerte en todo el período?
+
+Se recalculó la correlación por rubro en 4 ventanas de tiempo (2005-2010, 2011-2015, 2016-2019, 2020-2024) además del período completo. Script: `../../src/analisis_subperiodos.py` → `../../outputs/pyme_studio_estabilidad_subperiodos.csv` + gráfico `../../outputs/figures/hito4_estabilidad_subperiodos.png`.
+
+**Resultado, no ocultable:** Comercio y Alojamiento/Comidas parten débiles o no significativos en 2005-2010 y se fortalecen consistentemente hasta 2020-2024 (nunca cambian de signo). **Agricultura sí cambia de signo** — positivo y significativo en 2005-2010, negativo y significativo desde 2016. El resultado del período completo (r=−0,268) describe mejor la segunda mitad del período que los 20 años completos. Detalle completo en `../metodologia/metodologia.md`.
+
 ## Precisión conceptual (léase antes de citar este análisis)
 
 - Esto es una **asociación histórica entre concentración empresarial y términos de giro registrados** — no una medición de "fracaso" ni de quiebra legal, y no demuestra causalidad.
@@ -137,5 +149,7 @@ De los 19 rubros analizados, solo **2 cambian de conclusión** al excluir 2016 (
 **Del endurecimiento metodológico posterior (ver `../metodologia/metodologia.md`):**
 - `../../outputs/pyme_studio_sensibilidad_2016.csv`, `../../outputs/figures/hito4_sensibilidad_2016.png` — comparación con/sin 2016.
 - `../../outputs/pyme_studio_agregado_comuna_rubro_enriquecido.csv` (agrega `participacion_promedio`, no reemplaza el original), `../../outputs/pyme_studio_concentracion_absoluta_vs_relativa.csv` — comparación absoluta vs. relativa.
+- `../../outputs/pyme_studio_correlacion_por_rubro_ajustada.csv` (no reemplaza el original) — corrección FDR y Bonferroni. `../../src/analisis_comparaciones_multiples.py`.
+- `../../outputs/pyme_studio_estabilidad_subperiodos.csv`, `../../outputs/figures/hito4_estabilidad_subperiodos.png` — estabilidad por subperíodo. `../../src/analisis_subperiodos.py`.
 - `../../outputs/pyme_studio_alcance_pyme_por_rubro.csv`, `../../outputs/pyme_studio_alcance_pyme_por_comuna.csv` — % pyme real del universo analizado.
 - `../../src/analisis_metodologia.py` (sensibilidad 2016 + concentración relativa), `../../src/analisis_tamano_empresas.py` (alcance pyme).
