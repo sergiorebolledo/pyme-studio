@@ -29,7 +29,7 @@ UNIFICADO_PATH = OUT_DIR / "pyme_studio_unificado.csv"
 AGG_PATH = OUT_DIR / "pyme_studio_agregado_comuna_rubro.csv"
 CORR_RUBRO_PATH = OUT_DIR / "pyme_studio_correlacion_por_rubro.csv"
 
-# Misma paleta que dashboard_v2.html — --line, --mark, --grid, --paper, --ink
+# Misma paleta que dashboard/pyme_studio_dashboard.html — --line, --mark, --grid, --paper, --ink
 COLOR_POS = "#1F5C8B"     # confirma la hipótesis
 COLOR_NEG = "#C2632A"     # invierte la hipótesis
 COLOR_NS = "#B9C7CE"      # no significativo

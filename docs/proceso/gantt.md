@@ -2,7 +2,7 @@
 
 *Módulo 1, pág. 5 · plan a 6 semanas, con responsables de ejemplo (roles definidos en `equipo.md`)*
 
-> Roles: **[L]** Limpieza/Datos · **[A]** Análisis · **[P]** Producto final. **Pendiente de completar por el equipo:** asignar los nombres reales a cada rol (no se asumen aquí — el mini-proyecto anterior del equipo, `miniproyecto_empresas.ipynb`, da una pista de quién trabajó en qué: Avelyn García en carga/limpieza/unión de fuentes, Sergio Rebolledo en exploración estadística/correlaciones, Ignacio Hidalgo en conclusiones/recomendaciones — pero confirmar si la asignación de roles del capstone es la misma antes de darla por buena).
+> Roles: **[L]** Limpieza/Datos · **[A]** Análisis · **[P]** Producto final. **Confirmado:** los nombres reales, según el mini-proyecto anterior del equipo (`miniproyecto_empresas.ipynb`) — Avelyn García en carga/limpieza/unión de fuentes **[L]**, Sergio Rebolledo en exploración estadística/correlaciones **[A]**, Ignacio Hidalgo en conclusiones/recomendaciones **[P]** — ver también la sección "Equipo" del `README.md` principal.
 
 | Fase | S1 | S2 | S3 | S4 | S5 | S6 | Responsable | Estado real |
 |---|:-:|:-:|:-:|:-:|:-:|:-:|---|---|

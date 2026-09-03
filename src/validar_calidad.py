@@ -230,7 +230,7 @@ def main():
 
     if not UNIFICADO_PATH.exists():
         resultados.append(check(
-            "output/pyme_studio_unificado.csv existe", False,
+            "outputs/pyme_studio_unificado.csv existe", False,
             "No se encontró — corre pipeline.py primero", bloqueante=True,
         ))
         _emitir_reporte(resultados, {})
@@ -251,7 +251,7 @@ def main():
     n_ok = sum(1 for r in resultados if r["ok"])
     print(f"\n{n_ok}/{len(resultados)} chequeos OK.")
     if hay_bloqueante:
-        print("Hay al menos un problema BLOQUEANTE — revisar output/reporte_calidad.md")
+        print("Hay al menos un problema BLOQUEANTE — revisar outputs/reporte_calidad.md")
         sys.exit(1)
     else:
         print("Sin problemas bloqueantes (puede haber advertencias no bloqueantes).")

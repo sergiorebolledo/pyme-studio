@@ -5,7 +5,7 @@ Responde la pregunta de investigación:
 ¿Cuál es la concentración de pymes por rubro y comuna, y cómo se relaciona
 con su tasa histórica de término de giro (cierre)?
 
-Lee output/pyme_studio_unificado.csv (generado por pipeline.py) y:
+Lee outputs/pyme_studio_unificado.csv (generado por pipeline.py) y:
   1. Agrega por comuna+rubro a lo largo de todo 2005-2024 (una tasa por
      "empresa-año" en vez de promediar tasas anuales, que es más robusto
      ante combinaciones con pocas empresas).

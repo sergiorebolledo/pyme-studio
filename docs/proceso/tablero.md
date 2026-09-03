@@ -35,4 +35,4 @@
 5. Producto funcional → `../../dashboard/pyme_studio_dashboard.html` (entregable oficial, con mapa), interactivo y accesible
 6. Presentación final → `../presentacion/PYME_Studio_Presentacion.pptx` (entregable oficial), ver `../presentacion/presentacion.md`
 
-**Único pendiente real:** completar el placeholder `[equipo]` en la portada de la presentación — ver la nota en `gantt.md` con la pista del mini-proyecto anterior del equipo (`miniproyecto_empresas.ipynb`), a confirmar por el equipo antes de darla por buena.
+**Créditos del equipo confirmados:** Ignacio Hidalgo, Sergio Rebolledo y Avelyn García — los mismos del mini-proyecto anterior (`miniproyecto_empresas.ipynb`), con los roles ya reflejados en la portada de la presentación (ver `../presentacion/presentacion.md`) y en el `README.md` principal.

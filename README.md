@@ -2,8 +2,17 @@
 
 Análisis de la relación histórica entre concentración de empresas y su tasa de cierre en Chile, por comuna y rubro económico (2005–2024), con un dashboard interactivo y un mapa de Chile por comuna.
 
-**Autor:** Sergio Ariel Rebolledo Lopez
+**Autores:** Ignacio Hidalgo, Sergio Ariel Rebolledo López, Avelyn García
 **Contexto académico:** Samsung Innovation Campus 2026 — Capstone, Módulo 1 (Big Data Mixto)
+
+## Equipo
+
+| Autor | Rol en el proyecto |
+|---|---|
+| **Ignacio Hidalgo** | Redacción de conclusiones, recomendaciones y revisión de coherencia |
+| **Sergio Ariel Rebolledo López** | Exploración estadística, análisis de correlaciones, y reorganización/endurecimiento metodológico del repositorio |
+| **Avelyn García** | Carga, limpieza y unión de las fuentes de datos |
+| Todo el equipo | Construcción y revisión de visualizaciones |
 
 ---
 
@@ -102,7 +111,7 @@ pyme-studio/
 Requiere **Python 3.11+** (probado en 3.11–3.14).
 
 ```bash
-git clone <url-de-este-repositorio>
+git clone https://github.com/sergiorebolledo/pyme-studio.git
 cd pyme-studio
 pip install -r requirements.txt
 ```
@@ -138,7 +147,7 @@ Abre [`dashboard/pyme_studio_dashboard.html`](dashboard/pyme_studio_dashboard.ht
 
 Los 6 hitos del Módulo 1 están completos (problema y fuentes validados, datos obtenidos, pipeline funcional, análisis con significancia estadística, dashboard interactivo, presentación final), más un endurecimiento metodológico posterior (alcance del universo, sensibilidad a 2016, concentración relativa, precisión conceptual, control de calidad automatizado). Detalle en [`docs/proceso/tablero.md`](docs/proceso/tablero.md).
 
-**Pendiente:** completar el placeholder `[equipo]` en la portada de la presentación con los nombres reales de todos los integrantes — no se completa aquí para no inventar autoría (ver [`docs/presentacion/presentacion.md`](docs/presentacion/presentacion.md)).
+Los créditos del equipo académico ya están completos en la portada de la presentación (ver [`docs/presentacion/presentacion.md`](docs/presentacion/presentacion.md)).
 
 ## 12. Licencia y atribución
 

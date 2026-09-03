@@ -26,6 +26,10 @@ const IMG = (name) => path.join(__dirname, name);
 
 const pres = new pptxgen();
 pres.layout = "LAYOUT_WIDE";
+pres.title = "PYME Studio";
+pres.subject = "Concentración de empresas y su relación con el cierre de negocios en Chile, por comuna y rubro (SII, 2005-2024)";
+pres.author = "Ignacio Hidalgo, Sergio Ariel Rebolledo López, Avelyn García";
+pres.company = "Samsung Innovation Campus 2026 — Big Data Mixto";
 const W = 13.33, H = 7.5;
 const TOTAL = 17;
 
@@ -65,7 +69,7 @@ function iconCircle(slide, iconFile, x, y, d, circleColor) {
   s.addShape("line", { x: 0.9, y: 4.3, w: 3.2, h: 0, line: { color: RUST, width: 2.5 } });
   s.addText([
     { text: "Equipo:  ", options: { bold: true, color: "8FB4CE" } },
-    { text: "Ignacio · Sergio Ariel Rebolledo López · [equipo]\n", options: { color: WHITE } },
+    { text: "Ignacio Hidalgo · Sergio Ariel Rebolledo López · Avelyn García\n", options: { color: WHITE } },
     { text: "Fuente de datos:  ", options: { bold: true, color: "8FB4CE" } },
     { text: "Servicio de Impuestos Internos (SII), 2005–2024", options: { color: WHITE } },
   ], { x: 0.9, y: 4.65, w: 9.7, h: 0.8, fontFace: BODY, fontSize: 13, margin: 0, lineSpacingMultiple: 1.4 });

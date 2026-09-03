@@ -39,11 +39,11 @@ El documento pensado para mostrar el proyecto completo sin necesitar que quien l
 - `validate.py` (herramienta de QA de estructura pptx): "All validations PASSED!".
 - Integridad del `.zip` (`zipfile.testzip()` → `None`) y conteo de partes de diapositiva (17) verificados tras cada regeneración.
 - Conversión a PDF + revisión visual, diapositiva por diapositiva: **se encontró y corrigió un caso real de texto cortado** — el subtítulo del gráfico de barras por rubro se salía del borde derecho de la figura. Corregido ensanchando la figura en `src/graficar_hito4_extra.py` y regenerando el PNG y el deck. Tras la corrección: sin texto cortado, sin superposiciones, buen contraste en las 17 diapositivas.
-- Revisión de contenido: sin texto de relleno ("lorem", "TODO", placeholders no intencionales). El placeholder `[equipo]` de la diapositiva 1 es intencional (ver "Pendiente antes de entregar" abajo).
+- Revisión de contenido: sin texto de relleno ("lorem", "TODO", placeholders no intencionales).
 - Bug real encontrado y corregido: los íconos salían en negro en vez de blanco por una reconstrucción manual del SVG que perdía el atributo `color`.
 
-## Pendiente antes de entregar
-El campo **"Equipo: Ignacio · Sergio Ariel Rebolledo López · [equipo]"** en la portada (diapositiva 1) tiene un placeholder `[equipo]` — hay que completarlo con el resto de los integrantes reales. No se completa automáticamente para no inventar nombres.
+## Créditos del equipo
+El campo **"Equipo:"** en la portada (diapositiva 1) muestra los tres autores del proyecto — Ignacio Hidalgo, Sergio Ariel Rebolledo López, Avelyn García — con los mismos roles documentados en el `README.md` principal y en `../proceso/gantt.md`.
 
 ## Cómo regenerar el deck
 ```bash
