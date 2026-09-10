@@ -49,3 +49,70 @@ python run_pipeline.py
 ```
 
 `run_pipeline.py` verifica que los archivos necesarios existan antes de correr cada etapa y muestra un mensaje claro (no un traceback) si falta alguno.
+
+5. DATOS UTILIZADOS Y METODOLOGÍA
+
+FUENTES (SII, 2005-2024, todas a nivel año-comuna-rubro CIIU)
+
+- PUB_actividades_inscritas.txt: inicios/ampliaciones de actividad económica -> variable derivada "aperturas"
+- PUB_TG.txt: términos de giro -> variable derivada "cierres"
+- PUB_COMU_RUBR.xlsb: empresas activas por año-comuna-rubro (agregado oficial) -> variable derivada "empresas_activas"
+
+Las tres fuentes se normalizan con la misma clave (función normalizar_rubro: saca el código de letra inicial, quita tildes, pasa a mayúsculas) y se agregan por (año, comuna, rubro). Se unen con un merge tipo "outer" y los NaN resultantes de exposición nula se rellenan con 0 en aperturas, cierres y empresas_activas, excepto en la tasa de cierre, donde un denominador 0 se deja como NaN en vez de forzarse a 0, para no inventar una tasa donde no hubo empresas activas ese año.
+
+DEFINICIÓN DE LA TASA DE CIERRE
+
+Se usan dos variantes en el notebook, y vale la pena distinguirlas en el informe:
+
+1) Anual: tasa_cierre = cierres / empresas_activas, para cada (año, comuna, rubro).
+
+2) Agregada por combinación (usada en Preguntas 2 y 3):
+   tasa_cierre = cierres_total / empresa_años
+   donde empresa_años = suma de empresas_activas sobre los 20 años.
+   Esto pondera por exposición real en vez de promediar tasas anuales, evitando que años con pocas empresas (tasas ruidosas, ej. 1 de 2) pesen igual que años con miles de empresas.
+
+PREGUNTA 1 - CONCENTRACIÓN
+
+Promedio simple (media aritmética) de empresas_activas por combinación (comuna, rubro) a través de los 20 años. No se pondera por tiempo ni por tamaño de comuna, así que combinaciones con series cortas o discontinuas entran igual que las completas.
+
+PREGUNTA 2 - CONCENTRACIÓN VS. TASA DE CIERRE (NACIONAL)
+
+Correlación de Pearson y de Spearman entre concentracion_promedio y tasa_cierre a nivel de combinación comuna-rubro, filtrando a empresa_años >= 200 (umbral arbitrario para excluir combinaciones con muy poca exposición, que inflarían el ruido).
+
+Resultado: n = 3.932 combinaciones
+  Pearson  r = -0.028  (p = 0.077)
+  Spearman r = +0.029  (p = 0.066)
+
+Ambos valores son prácticamente cero y no significativos al 5%: a nivel nacional agregado no hay relación lineal ni monotónica clara entre concentración y cierre.
+
+PREGUNTA 3 - LO MISMO, POR RUBRO
+
+Se repite el cálculo de Spearman pero agrupando por rubro (filtro adicional: 30+ comunas y 50+ empresa-años por combinación), quedando 19 rubros con muestra suficiente. Aquí aparece la matemática interesante que el resultado nacional esconde:
+
+- Rubros con correlación NEGATIVA significativa (más concentración -> menos cierre):
+    Agricultura, ganadería, silvicultura y pesca: rho = -0.27 (p < 0.001)
+    Salud humana y asistencia social:            rho = -0.25 (p < 0.001)
+
+- Rubros con correlación POSITIVA fuerte (más concentración -> más cierre, efecto saturación):
+    Comercio al por mayor y al por menor: rho = 0.575 (p ~ 10^-31)
+    Transporte y almacenamiento:          rho = 0.42
+    Alojamiento y servicio de comidas:    rho = 0.36
+
+Esto es, matemáticamente, un caso de heterogeneidad que se cancela al agregar (similar a una paradoja de Simpson): el -0.03 nacional no significa "no hay efecto", sino que es el promedio de efectos opuestos por sector. Conviene decirlo explícitamente en el informe, porque es el hallazgo más fuerte del análisis. Además, el r = 0,58 citado en las recomendaciones corresponde justamente a Comercio en este análisis por rubro, no a una correlación nacional — conviene aclarar esa distinción en el texto, porque tal como está escrito puede leerse como si fuera el resultado agregado de la Pregunta 2.
+
+PREGUNTA 4 - SERIE TEMPORAL (APERTURAS Y CIERRES 2005-2024)
+
+Es puramente descriptiva: suma nacional de aperturas y cierres por año, sin ajuste estacional ni prueba estadística. Está bien dejarlo así si el objetivo es solo mostrar la evolución, pero para reforzar el rigor matemático se podría agregar una tasa de crecimiento año a año, o una prueba de cambio estructural (por ejemplo, un test de Chow) en el quiebre de 2016 que se menciona en las conclusiones.
+
+PREGUNTA 5 - VOLATILIDAD
+
+Crecimiento histórico (CAGR) sobre trabajadores totales (ponderados + honorarios) por rubro:
+  CAGR = (trabajadores_2024 / trabajadores_2005)^(1/19) - 1
+
+Volatilidad: desviación estándar de la variación porcentual interanual (no de los niveles). Mide qué tan errático es el crecimiento año a año, no la dispersión de los niveles absolutos.
+
+Correlación concentración vs. volatilidad (n = 19 rubros):
+  Pearson  r = -0.16  (p = 0.50)
+  Spearman r = -0.34  (p = 0.15)
+
+Con una muestra tan chica (19 rubros) ninguna de las dos correlaciones es significativa. Este resultado es sugerente, no concluyente — n=19 da muy poca potencia estadística a cualquier prueba de hipótesis.
